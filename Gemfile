@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+gem "nokogiri"
+gem "curb"
+gem "pdf-reader"
+gem "awesome_print"
