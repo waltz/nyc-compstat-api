@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
-dir = nil
 require "bundler"
 Bundler.require(:default)
 
