@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
-require "nokogiri"
-require "curb"
-require "pdf/reader"
-require "awesome_print"
-
 dir = nil
+require "bundler"
+Bundler.require(:default)
 
 def dir_name
   @dir_name ||= Time.now.strftime("%m-%d-%Y")
