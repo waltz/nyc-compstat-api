@@ -26,7 +26,6 @@ def download_pdfs
       Curl::Easy.download(url, file)
       parse_pdf(file)
       print "."  
-      exit
     end
   end
   puts "all done"
