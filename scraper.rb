@@ -42,7 +42,7 @@ end
 def get_column_names(set_of_rows)
   # ap set_of_rows
   more = set_of_rows[26].join(" ")
-  ap more
+  #ap more
 
   [
    "Week to Date, #{set_of_rows[18][0]}",
@@ -91,8 +91,8 @@ def parse_pdf(path_to_pdf)
         :data => lines[17..56]
       }
       
-      ap path_to_pdf
-      ap thing
+      #ap path_to_pdf
+      #ap thing
       @reports.insert(thing)
     end
   end
