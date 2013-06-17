@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
-require "nokogiri"
-require "curb"
-require "pdf/reader"
-require "awesome_print"
-
-dir = nil
+require "bundler"
+Bundler.require(:default)
+include Mongo
 
 def dir_name
   @dir_name ||= Time.now.strftime("%m-%d-%Y")
@@ -18,7 +15,14 @@ def build_or_set_dir
   end  
 end
 
+def setup_database
+  @database_client = MongoClient.new("localhost", 27017)
+  @database = @database_client.db("nyc-compstat")
+  @reports = @database['reports']
+end
+
 def download_pdfs
+  setup_database
   home = Curl.get "http://www.nyc.gov/html/nypd/html/crime_prevention/crime_statistics.shtml"
   doc = Nokogiri::HTML home.body_str
   main = doc.css("#main_content")
@@ -30,7 +34,6 @@ def download_pdfs
       Curl::Easy.download(url, file)
       parse_pdf(file)
       print "."  
-      exit
     end
   end
   puts "all done"
@@ -39,7 +42,7 @@ end
 def get_column_names(set_of_rows)
   # ap set_of_rows
   more = set_of_rows[26].join(" ")
-  ap more
+  #ap more
 
   [
    "Week to Date, #{set_of_rows[18][0]}",
@@ -88,8 +91,9 @@ def parse_pdf(path_to_pdf)
         :data => lines[17..56]
       }
       
-      ap path_to_pdf
-      ap thing
+      #ap path_to_pdf
+      #ap thing
+      @reports.insert(thing)
     end
   end
 end
