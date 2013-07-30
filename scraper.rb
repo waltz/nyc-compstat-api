@@ -3,7 +3,14 @@
 
 require "bundler"
 Bundler.require(:default)
+require "tempfile"
 include Mongo
+
+@connection ||= Fog::Storage.new({
+  provider:              "AWS",
+  aws_access_key_id:     ENV["S3_ACCESS_KEY_ID"],
+  aws_secret_access_key: ENV["S3_SECRET_ACCESS_KEY"]
+})
 
 def dir_name
   @dir_name ||= Time.now.strftime("%m-%d-%Y")
@@ -29,11 +36,26 @@ def download_pdfs
   main.first.css("a").each do |link|
     build_or_set_dir
     if link["href"].match /crime_statistics\/(.*.pdf)/
-      url  = "http://www.nyc.gov/html/nypd/downloads/pdf/crime_statistics/#{$1}"
-      file = "./#{dir_name}/#{$1}"
-      Curl::Easy.download(url, file)
-      parse_pdf(file)
-      print "."  
+      name = $1
+      url  = "http://www.nyc.gov/html/nypd/downloads/pdf/crime_statistics/#{name}"
+      file = File.new(name, "w+")
+      
+      # download / parse / persist
+      request = Curl::Easy.http_get(url)
+      file.write(request.body_str)
+
+      begin
+        parse_pdf(name)
+      rescue Exception => e
+        puts e.inspect
+      end
+
+      store_pdf(file)
+      
+      # clean up
+      File.delete(name)
+      
+      print "."      
     end
   end
   puts "all done"
@@ -72,7 +94,6 @@ def parse_pdf(path_to_pdf)
   PDF::Reader.open(path_to_pdf) do |reader|
     reader.pages.each do |page|
       lines = []
-      puts "=" * 20
       page.text.each_line do |line|
         pieces = line.split
         lines << pieces
@@ -96,6 +117,21 @@ def parse_pdf(path_to_pdf)
       @reports.insert(thing)
     end
   end
+end
+
+# Stores a PDF on S3.
+# Takes in a File and returns an Fog::Storage::AWS::File.
+def store_pdf(disk_file)
+  directory = @connection.directories.create({
+    :key    => ENV["S3_BUCKET"],
+    :public => true
+  })                                               
+
+  s3_file = directory.files.create(
+    :key    => dir_name + "/" + File.basename(disk_file.path),
+    :body   => disk_file,
+    :public => true
+  )
 end
 
 download_pdfs
