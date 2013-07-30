@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # coding: utf-8
 
+require "tempfile"
 require "bundler"
 Bundler.require(:default)
-require "tempfile"
 include Mongo
 
 @connection ||= Fog::Storage.new({
@@ -38,14 +38,14 @@ def download_pdfs
     if link["href"].match /crime_statistics\/(.*.pdf)/
       name = $1
       url  = "http://www.nyc.gov/html/nypd/downloads/pdf/crime_statistics/#{name}"
-      file = File.new(name, "w+")
+      file = Tempfile.new(ENV["S3_BUCKET"]) # File.new(name, "w+")
       
       # download / parse / persist
       request = Curl::Easy.http_get(url)
       file.write(request.body_str)
 
       begin
-        parse_pdf(name)
+        parse_pdf(file)
       rescue Exception => e
         puts e.inspect
       end
@@ -53,7 +53,7 @@ def download_pdfs
       store_pdf(file)
       
       # clean up
-      File.delete(name)
+      file.close; file.unlink # File.delete(name)
       
       print "."      
     end
@@ -90,8 +90,8 @@ def process_row(row)
   #   :columns => [] }
 end
 
-def parse_pdf(path_to_pdf)
-  PDF::Reader.open(path_to_pdf) do |reader|
+def parse_pdf(file)
+  PDF::Reader.open(file) do |reader|
     reader.pages.each do |page|
       lines = []
       page.text.each_line do |line|
