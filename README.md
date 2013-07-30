@@ -10,7 +10,8 @@ compstat reports and a machine queryable interface to this data.
 
 ### Ubuntu Installation
 
-    apt-get install rubygems libcurl4-openssl-dev libxml2-dev libxslt1-dev
-    gem install bundler
-    bundle install
-
+```Shell
+apt-get install rubygems libcurl4-openssl-dev libxml2-dev libxslt1-dev
+gem install bundler
+bundle install
+```
