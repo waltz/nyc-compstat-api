@@ -1,17 +1,13 @@
 # NYC Compstat API
 
-New York City revolutionized the way cities were policed with their COMPSTAT
-approach. The police department releases partial reports of the data that they
-collect, but this information is hidden in PDF documents that disappear after a
-week. This service aims to provide a historical archive of these weekly
-compstat reports and a machine queryable interface to this data.
+New York City revolutionized the way cities were policed with their COMPSTAT approach. The police department releases partial reports of the data that they collect, but this information is hidden in PDF documents that disappear after a week. This scraper downloads all of the reports on the [NYPD's crime statistics page](http://www.nyc.gov/html/nypd/html/crime_prevention/crime_statistics.shtml) and uploads them to an S3 bucket.
 
-## Installation Instructions
+## Using this thing
 
-### Ubuntu Installation
+* Install the required gems.
 
-```Shell
-apt-get install rubygems libcurl4-openssl-dev libxml2-dev libxslt1-dev
-gem install bundler
-bundle install
-```
+	`$ bundle`
+
+* Run the main archiver.
+
+	`$ ruby nyc_compstat_api.rb`	

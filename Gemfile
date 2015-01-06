@@ -1,10 +1,5 @@
 source "https://rubygems.org"
-gem "nokogiri"
-gem "curb"
-gem "pdf-reader", require: "pdf/reader"
-gem "bson_ext"
-gem "fog"
-gem "mongoid"
-gem "pry"
-gem "iconv"
+
 gem "dotenv"
+gem "fog"
+gem "nokogiri"
