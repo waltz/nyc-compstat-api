@@ -1,10 +1,4 @@
-require './report'
-
-require 'bundler'
-Bundler.require(:default)
-
-require 'dotenv'
-Dotenv.load
+require './environment'
 
 # This is the scraper portion of the application. This is meant to be run regularly
 # by a cron job. 
