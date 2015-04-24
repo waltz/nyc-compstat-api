@@ -1,11 +1,4 @@
-require 'minitest/autorun'
-require 'vcr'
-require_relative '../environment'
-
-VCR.configure do |config|
-  config.cassette_library_dir = File.expand_path('./fixtures/vcr_cassettes', File.dirname(__FILE__))
-  config.hook_into :webmock
-end
+require_relative './test_helper'
 
 class TestReport < Minitest::Test
   def setup    
@@ -14,7 +7,7 @@ class TestReport < Minitest::Test
   end
 
   def test_save
-    vcr.use_cassette('test_save') do
+    VCR.use_cassette('test_save') do
       assert_equal @report.save, true
     end
   end
