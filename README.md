@@ -20,4 +20,4 @@ https://nyc-compstat-api.s3.amazonaws.com/
 
 * Run the main archiver.
 
-	`$ ruby nyc_compstat_api.rb`	
+	`$ ruby application.rb`	
