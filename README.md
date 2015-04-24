@@ -10,6 +10,10 @@ https://nyc-compstat-api.s3.amazonaws.com/
 
 ## Using this thing
 
+* Running the tests.
+
+  `$ ruby test/report_test.rb`
+
 * Install the required gems.
 
 	`$ bundle`
