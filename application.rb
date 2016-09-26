@@ -1,7 +1,7 @@
 require './environment'
 
 # This is the scraper portion of the application. This is meant to be run regularly
-# by a cron job. 
+# by a cron job.
 
 # Download the page that lists all of the per-Precinct reports.
 home = Net::HTTP.get(URI('http://www.nyc.gov/html/nypd/html/crime_prevention/crime_statistics.shtml'))
