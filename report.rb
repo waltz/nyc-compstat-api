@@ -7,7 +7,7 @@ class Report < Struct.new(:url)
     file.public_url
   end
 
-  def file    
+  def file
     @file ||= bucket.files.new(
       key:    key,
       body:   original,
@@ -24,7 +24,7 @@ class Report < Struct.new(:url)
   end
 
   def directory_name
-    Time.now.strftime('%m-%d-%Y')    
+    Time.now.strftime('%m-%d-%Y')
   end
 
   def original
@@ -40,6 +40,7 @@ class Report < Struct.new(:url)
       provider:              'AWS',
       aws_access_key_id:     ENV['S3_ACCESS_KEY_ID'],
       aws_secret_access_key: ENV['S3_SECRET_ACCESS_KEY'],
+      region:                'us-west-1',
     })
   end
 end

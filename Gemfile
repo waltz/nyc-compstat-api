@@ -7,5 +7,8 @@ gem 'fog'
 gem 'minitest'
 gem 'nokogiri'
 gem 'rake'
-gem 'vcr'
-gem 'webmock'
+
+group :test do
+  gem 'vcr'
+  gem 'webmock'
+end
